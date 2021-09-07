@@ -35,3 +35,16 @@ class TestWorky(unittest.TestCase):
             .enqueue(BasicUnit('unit five after start'))
             .block()
         )
+
+    def test_multiple_workers(self):
+        queue = WorkQueue()
+
+        for i in range(100):
+            queue.enqueue(BasicUnit(f'[before] unit {i}'))
+
+        queue.worker(LoggerWorker, 5).start()
+
+        for i in range(100):
+            queue.enqueue(BasicUnit(f'[after] unit {i}'))
+
+        queue.block()
