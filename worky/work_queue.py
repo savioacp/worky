@@ -1,5 +1,5 @@
 from queue import Queue
-from typing import Any, Callable, Union
+from typing import Any, Callable, List, Tuple, Union
 
 from loguru import logger
 
@@ -13,7 +13,7 @@ class WorkQueue():
 
     def __init__(self) -> None:
         self._queue = Queue()
-        self._workers: list[WorkerThread] = []
+        self._workers: List[WorkerThread] = []
 
     @property
     def queue(self) -> Queue:
@@ -23,9 +23,9 @@ class WorkQueue():
         self.queue.put(unit)
         return self
 
-    def worker(self, worker: Union[WorkerThread], count: int = 1):
+    def worker(self, worker: Union[WorkerThread], count: int = 1, *, args: Tuple):
         for _ in range(count):
-            self._workers.append(worker(self.queue))
+            self._workers.append(worker(self.queue, *args))
         return self
 
     def start(self):
