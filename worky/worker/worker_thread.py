@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from queue import Queue
 import threading
-from worky.worker.work_unit import Break
+from worky.worker.work_unit import Break, WorkUnit
 
 
 class WorkerThread(threading.Thread, ABC):
@@ -16,9 +16,9 @@ class WorkerThread(threading.Thread, ABC):
     any more units of work, or if work fails.  
     """
 
-    def __init__(self, queue):
+    def __init__(self, queue: Queue):
         super().__init__()
-        self.queue: Queue = queue
+        self.queue = queue
         self.done = False
 
     @abstractmethod
@@ -29,7 +29,7 @@ class WorkerThread(threading.Thread, ABC):
         pass
 
     @abstractmethod
-    def work(self, unit):
+    def work(self, unit: WorkUnit):
         """
         Do the work.
 
